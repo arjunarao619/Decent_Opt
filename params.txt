@@ -1,10 +1,10 @@
 +-----------------+----------------------------+
 |      Models     | Total Trainable Parameters |
 +-----------------+----------------------------+
-| layer1.0.weight |           393216           |
-|  layer1.0.bias  |            128             |
-| layer1.1.weight |            128             |
-|  layer1.1.bias  |            128             |
-|    fc.weight    |            1280            |
-|      Total      |           394880           |
+| layer1.0.weight |          1572864           |
+|  layer1.0.bias  |            512             |
+| layer1.1.weight |            512             |
+|  layer1.1.bias  |            512             |
+|    fc.weight    |            5120            |
+|      Total      |          1579520           |
 +-----------------+----------------------------+
