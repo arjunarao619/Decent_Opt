@@ -323,7 +323,8 @@ class TorusGraph(PhysicalLayout):
         mixing_matrix = networkx.adjacency_matrix(graph).toarray()
         for i in range(0, mixing_matrix.shape[0]):
             mixing_matrix[i][i] = 1
-        mixing_matrix = mixing_matrix / 5
+        rows = (mixing_matrix != 0).sum(1)
+        mixing_matrix = mixing_matrix/rows[0]
         return mixing_matrix
 
     @property

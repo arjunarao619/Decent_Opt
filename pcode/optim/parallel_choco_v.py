@@ -12,6 +12,7 @@ from pcode.utils.sparsification import (
     SparsificationCompressor,
     QuantizationCompressor,
 )
+import threading
 from pcode.utils.tensor_buffer import TensorBuffer
 
 
@@ -149,7 +150,12 @@ class ParallelCHOCO_V(Optimizer):
                 neighbor_hat_params=self.neighbor_hat_params,
                 neighbors_info=self.neighbors_info,
             )
-            self.helper_thread.start()
+            try:
+                self.helper_thread.start()
+            except RuntimeError as e:
+                print("Error: {}".format(e))
+                print(threading.active_count())
+                exit()
             if self.conf.epoch_ % 1 == 0:
                 utils.join_thread(self.helper_thread)
         return self.n_bits
