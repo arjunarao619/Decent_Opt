@@ -325,6 +325,10 @@ class TorusGraph(PhysicalLayout):
             mixing_matrix[i][i] = 1
         rows = (mixing_matrix != 0).sum(1)
         mixing_matrix = mixing_matrix/rows[0]
+
+        print("*************************************")
+        print(mixing_matrix)
+        print("*************************************")
         return mixing_matrix
 
     @property
