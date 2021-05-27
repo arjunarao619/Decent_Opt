@@ -123,14 +123,21 @@ def maybe_resume_from_checkpoint(conf, model, optimizer, scheduler):
             )
 
             # get checkpoint.
-            checkpoint = torch.load(checkpoint_path, map_location="cpu")
+            try:
+                checkpoint = torch.load(checkpoint_path, map_location="cpu")
+            except:
+                print('OOPSIE')
+                print(e)
 
             # restore some run-time info.
             scheduler.update_from_checkpoint(checkpoint)
 
             # reset path for log.
             try:
-                remove_folder(conf.checkpoint_root)
+                # print("*********************************************")
+                # print(conf.checkpoint_root)
+                # print("*********************************************")
+                remove_folder(conf.checkpoint_root) 
             except RuntimeError as e:
                 print(f"ignore the error={e}")
             conf.checkpoint_root = conf.resume
@@ -148,10 +155,11 @@ def maybe_resume_from_checkpoint(conf, model, optimizer, scheduler):
             # configure logger.
             conf.logger = logging.Logger(conf.checkpoint_dir)
 
+
             # try to solve memory issue.
-            del checkpoint
-            torch.cuda.empty_cache()
-            gc.collect()
+            # del checkpoint
+            # torch.cuda.empty_cache()
+            # gc.collect()
             return
         else:
             print("=> no checkpoint found at '{}'".format(conf.resume))

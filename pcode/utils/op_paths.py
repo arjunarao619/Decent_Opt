@@ -33,7 +33,7 @@ def remove_folder(path):
     try:
         shutil.rmtree(path)
     except Exception as e:
-        print(' encounter error: {}'.format(e))
+        print(' encounter error!!!!!: {}'.format(e))
 
 
 def list_files(root_path):
