@@ -171,6 +171,68 @@ class CompleteGraph(PhysicalLayout):
         return in_peers, out_peers
 
 
+class SmallWorldGraph(PhysicalLayout):
+    def __init__(self, n_mpi_process, n_sub_process, world, comm_device, on_cuda, rank):
+        super(SmallWorldGraph, self).__init__(
+            n_mpi_process, n_sub_process, world, comm_device, on_cuda, rank
+        )
+        self._mixing_matrix = self._define_graph(n_mpi_process)
+
+    def _define_graph(self, n_mpi_process):
+        # define the graph.
+        n_connections = 2
+        sw = networkx.watts_strogatz_graph(n_mpi_process, n_connections, 0.3)
+
+       # get the mixing matrix.
+        mixing_matrix = networkx.adjacency_matrix(sw).toarray()
+
+
+        filename = "{}-{}-{}.txt".format(n_mpi_process,n_connections, 'smallworld')
+        
+        for i in range(0, mixing_matrix.shape[0]):
+            mixing_matrix[i][i] = 1
+        rows = (mixing_matrix != 0).sum(1)
+        mixing_matrix = mixing_matrix/rows[0]
+
+        print("*************************************")
+        print(mixing_matrix)
+        print("*************************************")
+
+        with open('graphs/'+filename) as inf:
+            inf.write(mixing_matrix)
+
+        
+        return mixing_matrix
+
+    @property
+    def n_nodes(self):
+        return self._n_mpi_process
+
+    @property
+    def n_edges(self):
+        raise NotImplementedError
+
+    @property
+    def rho(self):
+        raise NotImplementedError
+
+    @property
+    def beta(self):
+        raise NotImplementedError
+
+    @property
+    def matrix(self):
+        return self._mixing_matrix
+
+    @property
+    def scaling(self):
+        return len(self.get_neighborhood())
+
+    def get_neighborhood(self):
+        row = self._mixing_matrix[self._rank]
+        return {c: v for c, v in zip(range(len(row)), row) if v != 0}
+
+    
 class RingGraph(PhysicalLayout):
     def __init__(self, n_mpi_process, n_sub_process, world, comm_device, on_cuda, rank):
         super(RingGraph, self).__init__(

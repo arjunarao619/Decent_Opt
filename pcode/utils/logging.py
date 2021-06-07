@@ -17,10 +17,26 @@ class Logger:
         :param filename: ending with .json
         :param auto_save: save the JSON file after every addition
         """
+
         self.file_folder = file_folder
-        self.file_json = os.path.join(file_folder, "log-1.json")
+        #self.file_json = os.path.join(file_folder, "log-{}.json")
         self.file_txt = os.path.join(file_folder, "log.txt")
         self.values = []
+        
+        if(os.path.exists(self.file_folder)):
+            existing_json_files = [
+            file for file in os.listdir(self.file_folder) if "json" in file
+            ]
+            lengt = len(existing_json_files) + 1
+            self.file_json = os.path.join(file_folder, "log-{}.json".format(lengt))
+            #self.redirect_new_json()
+            print('######################$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+            print(lengt)
+            print(self.file_json)
+        else:
+            self.file_json = os.path.join(file_folder, "log-1.json")
+
+        
 
     def log_metric(self, name, values, tags, display=False):
         """
@@ -57,6 +73,7 @@ class Logger:
 
     def redirect_new_json(self):
         """get the number of existing json files under the current folder."""
+        
         existing_json_files = [
             file for file in os.listdir(self.file_folder) if "json" in file
         ]
