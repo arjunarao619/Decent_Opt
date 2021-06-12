@@ -181,7 +181,7 @@ class SmallWorldGraph(PhysicalLayout):
     def _define_graph(self, n_mpi_process):
         # define the graph.
         n_connections = 2
-        sw = networkx.watts_strogatz_graph(n_mpi_process, n_connections, 0.3)
+        sw = networkx.generators.random_graphs.connected_watts_strogatz_graph(n_mpi_process, n_connections, 0.0)
 
        # get the mixing matrix.
         mixing_matrix = networkx.adjacency_matrix(sw).toarray()
@@ -198,8 +198,9 @@ class SmallWorldGraph(PhysicalLayout):
         print(mixing_matrix)
         print("*************************************")
 
-        with open('graphs/'+filename) as inf:
-            inf.write(mixing_matrix)
+        # with open('/home/aarao8/choco_2/ChocoSGD/dl_code/graphs/'+filename, 'w') as inf:
+        #     inf.write(mixing_matrix)
+        # np.savetxt('/home/aarao8/choco_2/ChocoSGD/dl_code/graphs/'+filename, mixing_matrix)
 
         
         return mixing_matrix
@@ -222,10 +223,12 @@ class SmallWorldGraph(PhysicalLayout):
 
     @property
     def matrix(self):
+        print("rgswfgergergergergewrgwrg")
         return self._mixing_matrix
 
     @property
     def scaling(self):
+        print("rgswfgergergergergewrgwrg")
         return len(self.get_neighborhood())
 
     def get_neighborhood(self):
@@ -685,6 +688,8 @@ def define_graph_topology(
         graph_class = MargulisExpanderGraph
     elif graph_topology == "social":
         graph_class = SocialNetworkGraph
+    elif graph_topology == 'smallworld':
+        graph_class = SmallWorldGraph
     else:
         raise NotImplementedError
 

@@ -105,6 +105,7 @@ def get_args():
 
     # the topology of the decentralized network.
     parser.add_argument("--graph_topology", default="complete", type=str)
+    
 
     # compression scheme.
     parser.add_argument("--comm_algo", default=None, type=str)
